@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Label tabindex="-1" text="ID" display-tooltip-when-elided="true" name="ID" binding-path="ID" />
+    <uie:ObjectField label="Building" binding-path="Building" />
+</ui:UXML>

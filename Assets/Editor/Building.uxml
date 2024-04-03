@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/Building.uss?fileID=7433441132597879392&amp;guid=8b306a8aab44e7648985fc46e1b81198&amp;type=3#Building" />
+    <uie:Toolbar />
+    <ui:Button text="从当前场景生成配置表" display-tooltip-when-elided="true" name="GenerateFromSceneBtn" />
+    <uie:Toolbar />
+    <ui:Button text="导入配置" display-tooltip-when-elided="true" name="Input" />
+    <uie:Toolbar />
+    <ui:Button text="导出配置" display-tooltip-when-elided="true" name="Output" />
+    <uie:Toolbar />
+    <uie:PropertyField name="PropertyField" binding-path="ManifestName" label="ManifestName" />
+    <uie:PropertyField binding-path="Buildings" label="Buildings" name="PropertyField" />
+</ui:UXML>
