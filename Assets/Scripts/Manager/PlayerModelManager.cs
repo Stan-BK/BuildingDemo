@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Cinemachine.Editor;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,14 +9,14 @@ public class PlayerModelManager : MonoSingleton<PlayerModelManager>
 {
     public BuildingsManifestSO manifest;
     public BuildingsManifestSO myManifest;
-    public List<Building> BuildingsManifest = new ();
     public PlaceController placeController;
     public GameObject OptionBtn;
-    public Camera Camera;
-    public GameObject currentSelectObject;
+    public TMP_Text CancelBtnText;
+    GameObject currentSelectObject;
     public Material PlaceMaterial;
-    List<Building> BuildingsList = new ();
-    Dictionary<GameObject, Building> BuildingsDic = new();
+    public List<Building> BuildingsList = new(); // 存储玩家拥有建筑集合
+    public Dictionary<GameObject, Building> BuildingsDic = new(); // 存储场景内已放置建筑集合
+    public Camera Camera;
     public bool isPlacing
     {
         get => placeController.isPlacing;
@@ -26,13 +25,17 @@ public class PlayerModelManager : MonoSingleton<PlayerModelManager>
     protected override void Awake()
     {
         base.Awake();
-        BuildingsManifest = manifest.Buildings;
         currentSelectObject = null;
     }
 
     private void Start()
     {
         InitAllBuildings();
+    }
+
+    public void PlaceBuilding(Building building)
+    {
+        placeController.PlaceBuilding(building);
     }
 
     public void PlaceBuilding()
@@ -48,22 +51,30 @@ public class PlayerModelManager : MonoSingleton<PlayerModelManager>
                     b.building = currentSelectObject.GetComponent<IBuilding>().prototype.building;
                     BuildingsList.Add(b);
                     BuildingsDic.Add(currentSelectObject, b);
-                } else
+                }
+                else
                 {
                     b.position = currentSelectObject.transform.position;
                     b.rotation = currentSelectObject.transform.rotation;
                 }
+                b.isPlace = true;
                 ResetPlaceOption();
                 SaveAllBuildings();
             }
-        } else if (currentSelectObject != null)
+        }
+        else if (currentSelectObject != null)
+            // 激活当前选中物体的放置状态
             placeController.PlaceBuilding(currentSelectObject);
     }
 
     void InitAllBuildings()
     {
-        foreach (Building b in myManifest.Buildings) {
-            BuildingsDic.Add(placeController.CreatePlaceBuilding(b), b);
+        foreach (Building b in myManifest.Buildings)
+        {
+            if (b.isPlace)
+            {
+                BuildingsDic.Add(placeController.InitPlaceBuilding(b), b);
+            }
             BuildingsList.Add(b);
         }
     }
@@ -73,9 +84,22 @@ public class PlayerModelManager : MonoSingleton<PlayerModelManager>
         myManifest.Buildings = BuildingsList;
     }
 
+    public void CancelPlacing()
+    {
+        placeController.CancelPlacing(currentSelectObject);
+    }
+
     public void PlaceOption(GameObject gameObject)
     {
         OptionBtn.SetActive(true);
+        if (isPlacing)
+        {
+            CancelBtnText.text = "Cancel";
+        }
+        else
+        {
+            CancelBtnText.text = "Remove";
+        }
         currentSelectObject = gameObject;
         OptionBtn.transform.position = Camera.WorldToScreenPoint(gameObject.transform.position);
     }

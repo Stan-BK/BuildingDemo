@@ -7,6 +7,8 @@ public class Building
 {
     int ID;
     public int count = 1;
+    public string name;
+    [HideInInspector] public bool isPlace;
     public GameObject building; // 预制体对象
     [HideInInspector]public Vector3 position;
     [HideInInspector]public Quaternion rotation;
